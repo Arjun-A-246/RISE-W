@@ -27,7 +27,7 @@ const ReportIncident = () => {
       icon: Droplets,
       color: "text-blue-500",
       bg: "bg-blue-500/10",
-      border: "hover:border-blue-500/50",
+      border: "group-hover:border-blue-500/50",
     },
     {
       id: "wildlife",
@@ -35,7 +35,7 @@ const ReportIncident = () => {
       icon: PawPrint,
       color: "text-orange-500",
       bg: "bg-orange-500/10",
-      border: "hover:border-orange-500/50",
+      border: "group-hover:border-orange-500/50",
     },
     {
       id: "power",
@@ -43,7 +43,7 @@ const ReportIncident = () => {
       icon: Zap,
       color: "text-yellow-500",
       bg: "bg-yellow-500/10",
-      border: "hover:border-yellow-500/50",
+      border: "group-hover:border-yellow-500/50",
     },
     {
       id: "infra",
@@ -51,7 +51,7 @@ const ReportIncident = () => {
       icon: Construction,
       color: "text-gray-500",
       bg: "bg-gray-500/10",
-      border: "hover:border-gray-500/50",
+      border: "group-hover:border-gray-500/50",
     },
   ];
 
@@ -59,12 +59,10 @@ const ReportIncident = () => {
     setSelectedCategory(cat);
     setStep(2);
   };
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
   const handleSubmit = async () => {
     setTimeout(() => setStep(3), 800);
   };
@@ -72,52 +70,44 @@ const ReportIncident = () => {
   // --- SCREEN 1: SELECT CATEGORY ---
   if (step === 1)
     return (
-      <div className="animate-slide-up w-full max-w-2xl mx-auto">
-        {/* Back Button (Floating on top) */}
-        <div
-          className="flex items-center gap-2 text-wayanad-muted mb-6 cursor-pointer hover:text-wayanad-primary transition-colors self-start"
+      <div className="w-full max-w-2xl mx-auto opacity-0 animate-fade-up">
+        <button
+          className="flex items-center gap-2 text-wayanad-muted mb-8 hover:text-wayanad-primary transition-colors hover:-translate-x-1 duration-200"
           onClick={() => navigate(-1)}
         >
-          <ArrowLeft size={18} />
-          <span className="text-sm font-medium">Back to Home</span>
-        </div>
+          <ArrowLeft size={20} />{" "}
+          <span className="text-sm font-semibold">Back to Home</span>
+        </button>
 
-        {/* Main Card Panel */}
-        <div className="bg-transparent md:bg-wayanad-panel md:border md:border-wayanad-border md:p-10 md:rounded-3xl md:shadow-2xl">
-          {/* Header - Centered on Desktop */}
-          <div className="mb-8 md:text-center">
-            <h2 className="text-2xl md:text-3xl font-bold text-wayanad-text">
-              Select Incident Type
+        <div className="bg-wayanad-panel border border-wayanad-border p-8 md:p-10 rounded-3xl shadow-2xl backdrop-blur-xl">
+          <div className="mb-8 text-center">
+            <h2 className="text-3xl font-bold text-wayanad-text">
+              What's the issue?
             </h2>
-            <p className="text-wayanad-muted text-sm mt-2 hidden md:block">
-              Choose the category that best describes the issue.
+            <p className="text-wayanad-muted mt-2">
+              Select a category to notify authorities.
             </p>
           </div>
 
-          {/* THE GRID */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {categories.map((cat) => (
+            {categories.map((cat, idx) => (
               <div
                 key={cat.id}
                 onClick={() => handleCategorySelect(cat)}
-                // Mobile: Row layout (flex-row)
-                // Desktop: Column layout (flex-col) + Centered Text + Taller padding
-                className={`group flex md:flex-col items-center md:justify-center text-left md:text-center p-4 md:p-8 rounded-2xl bg-wayanad-panel md:bg-wayanad-bg/50 border border-wayanad-border backdrop-blur-sm transition-all cursor-pointer active:scale-[0.98] shadow-sm hover:bg-wayanad-primary/5 hover:border-wayanad-primary/30 hover:shadow-lg ${cat.border}`}
+                style={{ animationDelay: `${idx * 100}ms` }}
+                className={`group flex md:flex-col items-center md:justify-center p-5 md:p-8 rounded-2xl bg-wayanad-bg/50 border border-wayanad-border cursor-pointer transition-all duration-300 hover:scale-[1.03] hover:shadow-lg ${cat.border} opacity-0 animate-fade-up`}
               >
-                {/* Icon Circle */}
                 <div
-                  className={`p-3 md:p-5 rounded-full ${cat.bg} ${cat.color} mr-4 md:mr-0 md:mb-4 shadow-sm group-hover:scale-110 transition-transform`}
+                  className={`p-4 rounded-full ${cat.bg} ${cat.color} mb-0 md:mb-4 mr-4 md:mr-0 transition-transform group-hover:scale-110`}
                 >
                   <cat.icon size={28} />
                 </div>
-
-                {/* Text Content */}
-                <div className="flex-1 md:flex-none">
-                  <h3 className="font-semibold text-lg text-wayanad-text group-hover:text-wayanad-primary transition-colors">
+                <div>
+                  <h3 className="font-bold text-lg text-wayanad-text">
                     {cat.label}
                   </h3>
-                  <p className="text-xs text-wayanad-muted mt-1 opacity-80 md:hidden">
-                    Report {cat.label.toLowerCase()}
+                  <p className="text-xs text-wayanad-muted mt-1 opacity-0 group-hover:opacity-100 transition-opacity md:block hidden">
+                    Click to report
                   </p>
                 </div>
               </div>
@@ -130,102 +120,75 @@ const ReportIncident = () => {
   // --- SCREEN 2: DETAILS FORM ---
   if (step === 2)
     return (
-      <div className="animate-slide-up w-full max-w-2xl mx-auto">
-        <div
-          className="flex items-center gap-2 text-wayanad-muted mb-4 cursor-pointer hover:text-wayanad-primary transition-colors"
+      <div className="w-full max-w-2xl mx-auto opacity-0 animate-fade-up">
+        <button
+          className="flex items-center gap-2 text-wayanad-muted mb-6 hover:text-wayanad-primary transition-colors"
           onClick={() => setStep(1)}
         >
-          <ArrowLeft size={18} />
-          <span className="text-sm font-medium">Change Category</span>
-        </div>
+          <ArrowLeft size={20} />{" "}
+          <span className="text-sm font-semibold">Back to Categories</span>
+        </button>
 
-        {/* Form Card */}
-        <div className="bg-wayanad-panel p-6 md:p-10 rounded-3xl border border-wayanad-border backdrop-blur-md space-y-6 md:space-y-8 shadow-xl">
-          <div className="flex items-center gap-4 pb-4 border-b border-wayanad-border">
+        <div className="bg-wayanad-panel p-8 md:p-10 rounded-3xl border border-wayanad-border shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center gap-4 pb-6 border-b border-wayanad-border/50 mb-6">
             <div
-              className={`p-3 rounded-xl ${selectedCategory.bg} ${selectedCategory.color}`}
+              className={`p-3 rounded-2xl ${selectedCategory.bg} ${selectedCategory.color}`}
             >
-              <selectedCategory.icon size={24} />
+              <selectedCategory.icon size={26} />
             </div>
-            <h2 className="text-xl md:text-2xl font-bold text-wayanad-text">
-              {selectedCategory.label}
-            </h2>
+            <div>
+              <h2 className="text-2xl font-bold text-wayanad-text">
+                {selectedCategory.label}
+              </h2>
+              <p className="text-xs text-wayanad-muted font-medium uppercase tracking-wider">
+                New Report
+              </p>
+            </div>
           </div>
 
-          <div className="space-y-5">
+          <div className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-semibold tracking-wider text-wayanad-muted uppercase">
+              <label className="text-xs font-bold text-wayanad-muted uppercase tracking-wider ml-1">
                 Specific Issue
               </label>
-              <select
-                name="specificIssue"
-                value={formData.specificIssue}
-                onChange={handleInputChange}
-                className="w-full bg-wayanad-bg border border-wayanad-border rounded-xl p-3.5 text-wayanad-text focus:outline-none focus:border-wayanad-primary focus:ring-1 focus:ring-wayanad-primary appearance-none transition-colors"
-              >
-                <option value="" className="bg-wayanad-panel">
-                  Select Option...
-                </option>
-                <option value="General Failure" className="bg-wayanad-panel">
-                  General Failure
-                </option>
-                <option value="Critical Emergency" className="bg-wayanad-panel">
-                  Critical Emergency
-                </option>
-                {selectedCategory.id === "water" && (
-                  <option value="Muddy Water" className="bg-wayanad-panel">
-                    Muddy Water
-                  </option>
-                )}
-              </select>
+              <div className="relative">
+                <select
+                  name="specificIssue"
+                  value={formData.specificIssue}
+                  onChange={handleInputChange}
+                  className="w-full bg-wayanad-bg border border-wayanad-border rounded-xl p-4 text-wayanad-text appearance-none focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer hover:bg-wayanad-bg/80"
+                >
+                  <option value="">Select Option...</option>
+                  <option>General Failure</option>
+                  <option>Critical Emergency</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-wayanad-muted">
+                  ▼
+                </div>
+              </div>
             </div>
 
-            {selectedCategory.id === "power" && (
-              <div className="space-y-2 animate-fade-in">
-                <label className="text-xs font-semibold tracking-wider text-wayanad-muted uppercase">
-                  Pole Number
-                </label>
-                <input
-                  type="text"
-                  name="poleNumber"
-                  value={formData.poleNumber}
-                  onChange={handleInputChange}
-                  placeholder="e.g. SL-45"
-                  className="w-full bg-wayanad-bg border border-wayanad-border rounded-xl p-3.5 text-wayanad-text focus:outline-none focus:border-wayanad-primary focus:ring-1 focus:ring-wayanad-primary transition-colors"
-                />
-              </div>
-            )}
-
             <div className="space-y-2">
-              <label className="text-xs font-semibold tracking-wider text-wayanad-muted uppercase">
-                Location / Description
+              <label className="text-xs font-bold text-wayanad-muted uppercase tracking-wider ml-1">
+                Description
               </label>
               <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
                 rows="4"
-                placeholder="Describe what you observed..."
-                className="w-full bg-wayanad-bg border border-wayanad-border rounded-xl p-3.5 text-wayanad-text focus:outline-none focus:border-wayanad-primary focus:ring-1 focus:ring-wayanad-primary resize-none transition-colors"
+                placeholder="Describe location and details..."
+                className="w-full bg-wayanad-bg border border-wayanad-border rounded-xl p-4 text-wayanad-text focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none hover:bg-wayanad-bg/80"
               />
             </div>
 
-            <div className="border-2 border-dashed border-wayanad-border rounded-xl p-6 md:p-8 flex flex-col items-center justify-center text-wayanad-muted hover:bg-wayanad-primary/5 hover:border-wayanad-primary/30 cursor-pointer transition gap-2">
-              <div className="bg-wayanad-bg p-3 rounded-full">
-                <Camera size={24} />
-              </div>
-              <span className="text-sm font-medium">
-                Upload Photo (Optional)
-              </span>
-            </div>
+            <button
+              onClick={handleSubmit}
+              className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 font-bold text-white text-lg shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-0.5 active:scale-[0.99] transition-all duration-300 mt-4"
+            >
+              Submit Incident
+            </button>
           </div>
-
-          <button
-            onClick={handleSubmit}
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 py-4 rounded-xl font-bold text-white text-lg shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.01] active:scale-[0.98] transition-all duration-300"
-          >
-            SUBMIT INCIDENT
-          </button>
         </div>
       </div>
     );
@@ -233,27 +196,30 @@ const ReportIncident = () => {
   // --- SCREEN 3: SUCCESS ---
   if (step === 3)
     return (
-      <div className="h-[70vh] flex flex-col items-center justify-center text-center space-y-8 animate-slide-up px-4 max-w-lg mx-auto">
+      <div className="h-[60vh] flex flex-col items-center justify-center text-center space-y-8 animate-fade-up max-w-lg mx-auto">
         <div className="relative">
-          <div className="absolute inset-0 bg-emerald-500/20 blur-xl rounded-full"></div>
+          <div className="absolute inset-0 bg-emerald-500/20 blur-2xl rounded-full animate-pulse-slow"></div>
           <CheckCircle2
             size={100}
-            className="text-emerald-500 relative z-10 drop-shadow-md"
+            className="text-emerald-500 relative z-10 drop-shadow-xl"
           />
         </div>
         <div className="space-y-3">
-          <h2 className="text-3xl md:text-4xl font-bold text-wayanad-text">
+          <h2 className="text-4xl font-bold text-wayanad-text tracking-tight">
             Report Sent!
           </h2>
-          <p className="text-wayanad-muted text-base md:text-lg leading-relaxed">
-            Ticket <span className="text-emerald-500 font-mono">#343387</span>{" "}
-            has been created.
+          <p className="text-wayanad-muted text-lg">
+            Ticket{" "}
+            <span className="text-emerald-500 font-mono font-bold">
+              #343387
+            </span>{" "}
+            created.
           </p>
         </div>
-        <div className="w-full max-w-sm space-y-3 mt-8">
+        <div className="w-full max-w-xs space-y-3 pt-6">
           <button
             onClick={() => navigate("/my-reports")}
-            className="w-full bg-wayanad-panel border border-wayanad-border py-4 rounded-xl font-medium text-wayanad-text hover:bg-wayanad-primary/5 transition"
+            className="w-full bg-wayanad-panel border border-wayanad-border py-4 rounded-xl font-bold text-wayanad-text hover:bg-wayanad-primary/5 hover:border-emerald-500/30 transition-all shadow-sm"
           >
             Track Status
           </button>
@@ -262,7 +228,7 @@ const ReportIncident = () => {
               setStep(1);
               navigate("/");
             }}
-            className="w-full text-wayanad-muted py-3 text-sm hover:text-wayanad-text transition"
+            className="w-full text-wayanad-muted py-3 text-sm font-medium hover:text-wayanad-text transition-colors"
           >
             Back to Home
           </button>

@@ -1,84 +1,95 @@
 @import "tailwindcss";
 
 @theme {
-  /* Dynamic Theme Variables */
+  /* Theme Colors */
   --color-wayanad-bg: var(--bg-primary);
   --color-wayanad-panel: var(--bg-panel);
   --color-wayanad-text: var(--text-primary);
   --color-wayanad-muted: var(--text-secondary);
   --color-wayanad-border: var(--border-color);
 
-  /* Constant colors */
   --color-wayanad-primary: #10b981;
   --color-wayanad-danger: #ef4444;
 
-  /* Animations */
-  --animate-fade-in: fade-in 0.5s ease-out;
-  --animate-slide-up: slide-up 0.5s ease-out;
-  --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  /* New Animations */
+  --animate-blob: blob 7s infinite;
+  --animate-fade-up: fade-up 0.5s ease-out forwards;
+  --animate-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 
-  @keyframes fade-in {
-    from {
-      opacity: 0;
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
     }
-    to {
-      opacity: 1;
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
     }
   }
-  @keyframes slide-up {
+
+  @keyframes fade-up {
     from {
-      transform: translateY(20px);
       opacity: 0;
+      transform: translateY(20px);
     }
     to {
-      transform: translateY(0);
       opacity: 1;
+      transform: translateY(0);
     }
   }
 }
 
-/* --- THEME COLORS --- */
-
-/* Light Mode (Clean Mint) */
 :root {
-  --bg-primary: #f0fdf4; /* Full Screen Background */
-  --bg-panel: #ffffff; /* Cards */
-  --text-primary: #064e3b; /* Dark Green Text */
-  --text-secondary: #64748b; /* Slate Gray */
+  --bg-primary: #f0fdf4;
+  --bg-panel: rgba(255, 255, 255, 0.7); /* Translucent in light mode */
+  --text-primary: #064e3b;
+  --text-secondary: #64748b;
   --border-color: #e2e8f0;
 }
 
-/* Dark Mode (Wayanad Forest) */
 .dark {
-  --bg-primary: #02120f; /* Full Screen Background */
-  --bg-panel: #07221d;
+  --bg-primary: #02120f;
+  --bg-panel: rgba(7, 34, 29, 0.7); /* Translucent in dark mode */
   --text-primary: #ecfdf5;
   --text-secondary: #6ee7b7;
-  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Global Styles */
 body {
-  background-color: var(--bg-primary); /* Applies to WHOLE page */
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family:
     system-ui,
     -apple-system,
     sans-serif;
   transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+    background-color 0.5s ease,
+    color 0.5s ease;
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  overflow-x: hidden; /* <--- THIS IS THE KEY ADDITION */
+  overflow-x: hidden;
 }
 
-/* Fixed Scrollbar Utility */
 @utility scrollbar-hide {
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Stagger Utilities */
+@utility delay-100 {
+  animation-delay: 100ms;
+}
+@utility delay-200 {
+  animation-delay: 200ms;
+}
+@utility delay-300 {
+  animation-delay: 300ms;
 }
