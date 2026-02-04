@@ -1,70 +1,75 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, Plus, History, Bell } from "lucide-react";
+import { AlertTriangle, Bell, History } from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Hero Text */}
-      <div className="mt-4 space-y-1">
-        <h2 className="text-3xl font-light text-white/90">Township</h2>
-        <h2 className="text-3xl font-bold text-emerald-400">Incident Portal</h2>
-        <p className="text-wayanad-muted text-sm mt-2">
-          Report and track critical issues in your sector.
+    // Main container: Centered vertical stack with a max-width for desktop
+    <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-10 animate-fade-in max-w-3xl mx-auto text-center">
+      {/* 1. Hero Section */}
+      <div className="space-y-3">
+        <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">
+          Township Incident Portal
+        </h1>
+        <p className="text-wayanad-muted text-lg md:text-xl max-w-xl mx-auto">
+          Report and track critical issues in your area instantly.
         </p>
       </div>
 
-      {/* Giant Action Button */}
-      <div className="flex justify-center py-4">
+      {/* 2. Main Action Area */}
+      <div className="w-full max-w-md space-y-4">
+        {/* Primary "Report" Button */}
         <button
           onClick={() => navigate("/report")}
-          className="relative group w-36 h-36 rounded-full bg-gradient-to-br from-rose-500 to-red-600 flex flex-col items-center justify-center shadow-[0_0_40px_-10px_rgba(239,68,68,0.6)] hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
+          className="group w-full py-4 px-6 bg-gradient-to-r from-rose-500 to-red-600 rounded-2xl shadow-lg shadow-red-500/20 hover:shadow-red-500/40 hover:scale-[1.02] transition-all duration-300"
         >
-          {/* Ping Animation Ring */}
-          <div className="absolute inset-0 rounded-full border-4 border-white/20 animate-pulse-slow"></div>
-
-          <Plus size={40} className="text-white mb-1 drop-shadow-md" />
-          <span className="font-bold text-white tracking-widest text-xs">
-            REPORT
+          <span className="text-xl font-bold text-white tracking-wide">
+            Report an Incident
           </span>
+        </button>
+
+        {/* Sub-text underneath */}
+        <p className="text-wayanad-muted text-sm font-medium">
+          Maintenance • Utilities • Safety
+        </p>
+      </div>
+
+      {/* 3. Secondary Actions (Stack on mobile, side-by-side on desktop) */}
+      <div className="flex flex-col md:flex-row gap-4 w-full max-w-md">
+        <button
+          onClick={() => navigate("/alerts")}
+          className="flex-1 flex items-center justify-center gap-3 py-3.5 px-6 bg-wayanad-panel/80 border border-wayanad-border/50 rounded-xl hover:bg-wayanad-primary/10 hover:border-wayanad-primary/30 transition-all group"
+        >
+          <Bell
+            size={20}
+            className="text-yellow-500 group-hover:scale-110 transition-transform"
+          />
+          <span className="font-semibold text-wayanad-text">View Alerts</span>
+        </button>
+
+        <button
+          onClick={() => navigate("/my-reports")}
+          className="flex-1 flex items-center justify-center gap-3 py-3.5 px-6 bg-wayanad-panel/80 border border-wayanad-border/50 rounded-xl hover:bg-wayanad-primary/10 hover:border-wayanad-primary/30 transition-all group"
+        >
+          <History
+            size={20}
+            className="text-blue-500 group-hover:scale-110 transition-transform"
+          />
+          <span className="font-semibold text-wayanad-text">My Reports</span>
         </button>
       </div>
 
-      {/* Quick Access Grid */}
-      <div className="grid grid-cols-2 gap-4">
-        <div
-          onClick={() => navigate("/alerts")}
-          className="bg-wayanad-panel/60 backdrop-blur-md border border-white/5 p-5 rounded-2xl flex flex-col items-start gap-3 hover:bg-white/10 transition cursor-pointer active:scale-95"
-        >
-          <div className="p-2 bg-yellow-500/20 rounded-lg text-yellow-400">
-            <Bell size={24} />
-          </div>
-          <span className="font-medium text-lg">Alerts</span>
-        </div>
-
-        <div
-          onClick={() => navigate("/my-reports")}
-          className="bg-wayanad-panel/60 backdrop-blur-md border border-white/5 p-5 rounded-2xl flex flex-col items-start gap-3 hover:bg-white/10 transition cursor-pointer active:scale-95"
-        >
-          <div className="p-2 bg-blue-500/20 rounded-lg text-blue-400">
-            <History size={24} />
-          </div>
-          <span className="font-medium text-lg">My Reports</span>
-        </div>
-      </div>
-
-      {/* Live Alert Ticker */}
-      <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-xl flex items-start gap-3 backdrop-blur-sm">
-        <AlertTriangle className="text-red-500 shrink-0 mt-1" size={18} />
+      {/* 4. Critical Alert Ticker (Optional) */}
+      <div className="w-full max-w-xl bg-red-500/10 border border-red-500/20 p-4 rounded-2xl flex items-start gap-3 backdrop-blur-sm text-left mt-4">
+        <AlertTriangle className="text-red-500 shrink-0 mt-0.5" size={20} />
         <div>
-          <h4 className="text-red-400 font-bold text-sm tracking-wide uppercase">
+          <h4 className="text-red-500 font-bold text-sm tracking-wide uppercase">
             Wildlife Alert
           </h4>
-          <p className="text-xs text-red-100/80 mt-1 leading-relaxed">
-            Elephant sighted near Sector B (10 mins ago). Please stay indoors
-            and avoid the forest edge road.
+          <p className="text-sm text-red-500/90 mt-1 leading-relaxed dark:text-red-200/90">
+            Elephant sighted near Sector B (10 mins ago). Please stay indoors.
           </p>
         </div>
       </div>

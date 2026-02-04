@@ -1,26 +1,35 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-wayanad-dark text-wayanad-text overflow-hidden relative font-sans">
-      {/* Background Ambience (Glowing Orbs) */}
-      <div className="fixed top-[-10%] left-[-10%] w-96 h-96 bg-wayanad-primary/20 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
-      <div className="fixed bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
+    <div className="min-h-screen w-full bg-wayanad-bg text-wayanad-text transition-colors duration-300 font-sans relative flex flex-col">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-[120px] mix-blend-screen dark:bg-emerald-500/20" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] mix-blend-screen dark:bg-blue-500/10" />
+      </div>
 
-      {/* Mobile Container */}
-      <div className="relative z-10 max-w-md mx-auto h-screen flex flex-col bg-white/0 shadow-2xl overflow-hidden">
-        {/* Header */}
-        <header className="p-6 flex justify-between items-center backdrop-blur-md sticky top-0 z-50 border-b border-white/5">
-          <h1 className="text-xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+      {/* Header */}
+      <header className="sticky top-0 z-50 w-full bg-wayanad-bg/90 backdrop-blur-md border-b border-wayanad-border/50">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-10 py-4 flex justify-between items-center">
+          <h1 className="text-xl md:text-2xl font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-500 cursor-pointer">
             WAYANAD CONNECT
           </h1>
-          {/* User Avatar Placeholder */}
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-600 border-2 border-white/20 shadow-lg" />
-        </header>
+          <div className="flex items-center gap-4">
+            <ThemeToggle />
+            <div className="w-9 h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-emerald-400 to-cyan-600 border-2 border-white/20 shadow-lg cursor-pointer hover:scale-105 transition-transform" />
+          </div>
+        </div>
+      </header>
 
-        {/* Scrollable Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 pb-32 scrollbar-hide">
+      {/* Main Content Container 
+          - Mobile: Full width
+          - Desktop: Max width 6xl (Wide Dashboard feel) 
+      */}
+      <div className="flex-1 w-full max-w-6xl mx-auto relative z-10">
+        <main className="p-6 md:p-10 pb-24 animate-fade-in">
           <Outlet />
         </main>
       </div>

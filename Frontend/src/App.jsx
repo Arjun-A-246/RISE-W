@@ -4,7 +4,7 @@ import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import ReportIncident from "./pages/ReportIncident";
 
-// --- PLACEHOLDER COMPONENTS (To be built later) ---
+// Placeholders
 const MyReports = () => {
   const navigate = useNavigate();
   return (
@@ -15,8 +15,8 @@ const MyReports = () => {
       >
         <ArrowLeft size={18} /> <span className="text-sm">Back</span>
       </div>
-      <h2 className="text-xl font-bold text-white">My Reports</h2>
-      <div className="p-8 text-center border border-dashed border-white/10 rounded-xl text-wayanad-muted">
+      <h2 className="text-xl font-bold text-wayanad-text">My Reports</h2>
+      <div className="p-8 text-center border border-dashed border-wayanad-border rounded-xl text-wayanad-muted">
         Connecting to /api/v1/user/reports...
       </div>
     </div>
@@ -33,8 +33,8 @@ const Alerts = () => {
       >
         <ArrowLeft size={18} /> <span className="text-sm">Back</span>
       </div>
-      <h2 className="text-xl font-bold text-white">Safety Alerts</h2>
-      <div className="p-8 text-center border border-dashed border-white/10 rounded-xl text-wayanad-muted">
+      <h2 className="text-xl font-bold text-wayanad-text">Safety Alerts</h2>
+      <div className="p-8 text-center border border-dashed border-wayanad-border rounded-xl text-wayanad-muted">
         Connecting to /api/v1/alerts...
       </div>
     </div>
