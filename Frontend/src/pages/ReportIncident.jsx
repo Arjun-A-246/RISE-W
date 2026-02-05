@@ -87,11 +87,31 @@ const ReportIncident = () => {
     }
     setLocationStatus("loading");
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCoords({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setCoords({ lat: latitude, lng: longitude });
+
+        // Reverse Geocode
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
+          );
+          const data = await response.json();
+          if (data.display_name) {
+            // Formatting address to be concise
+            const addressParts = data.display_name.split(',').slice(0, 4).join(', ');
+            // We don't have a direct "location" field in step 2 form for user to edit easily except "description"
+            // Or we can just set it as the location string for the report.
+            // The user asked for "option to type if it is not correct".
+            // Best approach: Add a new form state for 'resolvedAddress' and allow editing in UI.
+            // For now, let's update this function to store the address, 
+            // and we will update the UI below to show an input field for it.
+            setFormData(prev => ({ ...prev, description: prev.description + (prev.description ? "\n\n" : "") + `Location: ${addressParts}` }));
+          }
+        } catch (e) {
+          console.error("Geocoding failed", e);
+        }
+
         setLocationStatus("success");
       },
       () => {
@@ -206,13 +226,12 @@ const ReportIncident = () => {
                 disabled={
                   locationStatus === "success" || locationStatus === "loading"
                 }
-                className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 transition-all ${
-                  locationStatus === "success"
+                className={`text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1 transition-all ${locationStatus === "success"
                     ? "bg-emerald-500 text-white"
                     : locationStatus === "error"
                       ? "bg-red-500 text-white"
                       : "bg-wayanad-bg border border-wayanad-border text-emerald-600 hover:bg-emerald-50"
-                }`}
+                  }`}
               >
                 {locationStatus === "loading" && (
                   <Loader2 size={12} className="animate-spin" />

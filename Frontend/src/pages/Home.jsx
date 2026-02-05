@@ -1,9 +1,36 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { AlertTriangle, Bell, History, ChevronRight } from "lucide-react";
+import { AlertTriangle, Bell, History, ChevronRight, Zap, Info, CloudRain } from "lucide-react";
+import { useAlerts } from "../context/AlertContext";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { alerts } = useAlerts();
+
+  // Get latest alert
+  const latestAlert = alerts.length > 0 ? alerts[0] : null;
+
+  const getAlertStyles = (type) => {
+    switch (type) {
+      case "critical":
+        return "bg-red-500/5 border-red-500/10 text-red-500";
+      case "warning":
+        return "bg-yellow-500/5 border-yellow-500/10 text-yellow-500";
+      case "info":
+        return "bg-blue-500/5 border-blue-500/10 text-blue-500";
+      default:
+        return "bg-gray-500/5 border-gray-500/10 text-gray-500";
+    }
+  };
+
+  const getIcon = (type) => {
+    switch (type) {
+      case "critical": return AlertTriangle;
+      case "warning": return Zap;
+      case "info": return Info; // or CloudRain for specific
+      default: return Info;
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] space-y-12 max-w-3xl mx-auto text-center">
@@ -76,21 +103,33 @@ const Home = () => {
       </div>
 
       {/* 4. Ticker (Fade Up + Delay 3) */}
-      <div className="w-full max-w-2xl opacity-0 animate-fade-up delay-300">
-        <div className="bg-red-500/5 border border-red-500/10 p-4 rounded-xl flex items-center gap-4 backdrop-blur-sm hover:bg-red-500/10 transition-colors">
-          <div className="shrink-0 animate-pulse-slow">
-            <AlertTriangle className="text-red-500" size={20} />
-          </div>
-          <div className="text-left">
-            <h4 className="text-red-500 font-bold text-xs tracking-wider uppercase">
-              Wildlife Alert • 10m ago
-            </h4>
-            <p className="text-sm text-wayanad-text/80 mt-0.5">
-              Elephant sighted near Sector B. Please stay indoors.
-            </p>
+      {latestAlert && (
+        <div className="w-full max-w-2xl opacity-0 animate-fade-up delay-300">
+          <div
+            onClick={() => navigate("/alerts")}
+            className={`border p-4 rounded-xl flex items-center gap-4 backdrop-blur-sm cursor-pointer transition-colors ${getAlertStyles(latestAlert.type)} hover:bg-opacity-20`}
+          >
+            <div className="shrink-0 animate-pulse-slow">
+              {(() => {
+                const Icon = getIcon(latestAlert.type);
+                return <Icon size={20} />;
+              })()}
+            </div>
+            <div className="text-left flex-1">
+              <div className="flex justify-between items-center">
+                <h4 className="font-bold text-xs tracking-wider uppercase">
+                  {latestAlert.title}
+                </h4>
+                <span className="text-[10px] opacity-70">{latestAlert.time}</span>
+              </div>
+              <p className="text-sm opacity-90 mt-0.5 line-clamp-1">
+                {latestAlert.message}
+              </p>
+            </div>
+            <ChevronRight size={16} className="opacity-50" />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

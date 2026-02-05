@@ -1,40 +1,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, AlertTriangle, CloudRain, Zap, Info } from "lucide-react";
+import { ArrowLeft, AlertTriangle, CloudRain, Zap, Info, Plus } from "lucide-react";
+import { useAlerts } from "../context/AlertContext";
+
+// Icon mapping helper
+const getIconComponent = (iconName) => {
+  const icons = { AlertTriangle, Zap, CloudRain, Info };
+  return icons[iconName] || Info;
+};
 
 const Alerts = () => {
   const navigate = useNavigate();
-
-  // Mock Data for UI demonstration
-  const alerts = [
-    {
-      id: 1,
-      type: "critical", // red
-      title: "Wildlife Alert: Elephant Sighted",
-      message:
-        "Wild elephant spotted near Sector B market area. Residents are advised to stay indoors and avoid the forest edge road.",
-      time: "10 mins ago",
-      icon: AlertTriangle,
-    },
-    {
-      id: 2,
-      type: "warning", // yellow
-      title: "Power Outage Scheduled",
-      message:
-        "Maintenance work on Main St. Power will be down from 2:00 PM to 5:00 PM today.",
-      time: "2 hours ago",
-      icon: Zap,
-    },
-    {
-      id: 3,
-      type: "info", // blue
-      title: "Heavy Rain Forecast",
-      message:
-        "Yellow alert issued for Wayanad district. Drive carefully on ghat roads due to potential slippery conditions.",
-      time: "5 hours ago",
-      icon: CloudRain,
-    },
-  ];
+  const { alerts } = useAlerts();
 
   // Helper to get colors based on severity
   const getStyles = (type) => {
@@ -64,64 +41,91 @@ const Alerts = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto animate-fade-in">
+    <div className="w-full max-w-2xl mx-auto animate-fade-in relative pb-24">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-2 rounded-full hover:bg-wayanad-panel transition-colors text-wayanad-muted hover:text-wayanad-text"
-        >
-          <ArrowLeft size={20} />
-        </button>
-        <div>
-          <h1 className="text-2xl font-bold text-wayanad-text">
-            Safety Alerts
-          </h1>
-          <p className="text-sm text-wayanad-muted">
-            Live updates from Township Authority
-          </p>
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="p-2 -ml-2 rounded-full hover:bg-wayanad-panel transition-colors text-wayanad-muted hover:text-wayanad-text"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold text-wayanad-text">
+              Safety Alerts
+            </h1>
+            <p className="text-sm text-wayanad-muted">
+              Live updates from Township & Community
+            </p>
+          </div>
         </div>
       </div>
 
+      {/* Floating Action Button for Creating Alert */}
+      <button
+        onClick={() => navigate("/create-alert")}
+        className="fixed bottom-6 right-6 md:bottom-10 md:right-10 bg-gradient-to-br from-red-500 to-red-600 text-white p-4 rounded-full shadow-[0_4px_20px_rgba(220,38,38,0.4)] hover:shadow-[0_4px_25px_rgba(220,38,38,0.6)] hover:scale-110 active:scale-90 transition-all z-20 flex items-center justify-center group"
+        aria-label="Broadcast Alert"
+      >
+        <Plus size={28} className="drop-shadow-sm group-hover:rotate-90 transition-transform duration-300" />
+      </button>
+
       {/* Alerts Feed */}
       <div className="space-y-4">
-        {alerts.map((alert) => (
-          <div
-            key={alert.id}
-            className={`p-5 rounded-r-xl bg-wayanad-panel border border-wayanad-border shadow-sm ${getStyles(alert.type)}`}
-          >
-            <div className="flex items-start gap-4">
-              {/* Icon */}
-              <div
-                className={`mt-1 p-2 rounded-lg bg-wayanad-bg ${getIconColor(alert.type)}`}
-              >
-                <alert.icon size={24} />
-              </div>
-
-              {/* Content */}
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <h3 className="text-lg font-bold text-wayanad-text">
-                    {alert.title}
-                  </h3>
-                  <span className="text-xs font-mono text-wayanad-muted bg-wayanad-bg px-2 py-1 rounded">
-                    {alert.time}
-                  </span>
-                </div>
-                <p className="text-wayanad-muted mt-1 text-sm leading-relaxed">
-                  {alert.message}
-                </p>
-              </div>
-            </div>
+        {alerts.length === 0 ? (
+          <div className="text-center py-20 text-wayanad-muted border-2 border-dashed border-wayanad-border rounded-2xl">
+            <p>No active alerts.</p>
           </div>
-        ))}
+        ) : (
+          alerts.map((alert) => {
+            const Icon = getIconComponent(alert.icon);
+            return (
+              <div
+                key={alert.id}
+                className={`p-5 rounded-r-xl bg-wayanad-panel border border-wayanad-border shadow-sm transform transition-all hover:translate-x-1 ${getStyles(alert.type)}`}
+              >
+                <div className="flex items-start gap-4">
+                  {/* Icon */}
+                  <div
+                    className={`mt-1 p-2 rounded-lg bg-wayanad-bg ${getIconColor(alert.type)}`}
+                  >
+                    <Icon size={24} />
+                  </div>
+
+                  {/* Content */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start">
+                      <h3 className="text-lg font-bold text-wayanad-text">
+                        {alert.title}
+                      </h3>
+                      <span className="text-xs font-mono text-wayanad-muted bg-wayanad-bg px-2 py-1 rounded">
+                        {alert.time}
+                      </span>
+                    </div>
+                    <p className="text-wayanad-text/80 mt-1 text-sm leading-relaxed">
+                      {alert.message}
+                    </p>
+                    {alert.location && (
+                      <p className="mt-2 text-xs font-bold text-wayanad-muted flex items-center gap-1">
+                        <Zap size={10} className="text-current" /> {alert.location}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
 
         {/* End of list */}
-        <div className="text-center py-8">
-          <p className="text-xs text-wayanad-muted uppercase tracking-widest">
-            No older alerts
-          </p>
-        </div>
+        {alerts.length > 0 && (
+          <div className="text-center py-8">
+            <p className="text-xs text-wayanad-muted uppercase tracking-widest">
+              End of Updates
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
