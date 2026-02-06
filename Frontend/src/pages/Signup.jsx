@@ -1,31 +1,24 @@
 import React, { useState } from "react";
-import { Mail, Lock, ArrowRight, Leaf } from "lucide-react"; // Removed User, Phone
+import { User, Mail, Lock, Phone, ArrowRight, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
 import ThemeToggle from "../components/ThemeToggle";
-import { useAuth } from "../context/AuthContext"; // Import useAuth
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const Signup = () => {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phone: "",
     email: "",
     password: "",
   });
-  const [error, setError] = useState(null); // State for error messages
-  const { signup } = useAuth(); // Get signup function from AuthContext
-  const navigate = useNavigate(); // Get navigate function
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
-    // Call signup function from AuthContext
-    const success = await signup(formData.email, formData.password);
-    if (!success) {
-      setError("Signup failed. Please try again.");
-    }
+    console.log("Signup logic here...", formData);
   };
 
   return (
@@ -66,16 +59,71 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Removed Name Fields and Phone Number Field to match backend User model */}
+            {/* Name Fields (Side by Side) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block text-sm font-medium text-wayanad-text mb-2 ml-1">
+                  First Name
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-wayanad-muted group-focus-within:text-emerald-500 transition-colors" />
+                  </div>
+                  <input
+                    type="text"
+                    name="firstName"
+                    required
+                    className="block w-full pl-10 pr-3 py-3 bg-white/50 dark:bg-black/20 border border-wayanad-border rounded-xl text-wayanad-text placeholder-wayanad-muted/70 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all duration-200"
+                    placeholder="John"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-wayanad-text mb-2 ml-1">
+                  Last Name
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-wayanad-muted group-focus-within:text-emerald-500 transition-colors" />
+                  </div>
+                  <input
+                    type="text"
+                    name="lastName"
+                    required
+                    className="block w-full pl-10 pr-3 py-3 bg-white/50 dark:bg-black/20 border border-wayanad-border rounded-xl text-wayanad-text placeholder-wayanad-muted/70 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all duration-200"
+                    placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-sm font-medium text-wayanad-text mb-2 ml-1">
+                Phone Number
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-wayanad-muted group-focus-within:text-emerald-500 transition-colors" />
+                </div>
+                <input
+                  type="tel"
+                  name="phone"
+                  required
+                  className="block w-full pl-10 pr-3 py-3 bg-white/50 dark:bg-black/20 border border-wayanad-border rounded-xl text-wayanad-text placeholder-wayanad-muted/70 focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 outline-none transition-all duration-200"
+                  placeholder="+91 98765 43210"
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
 
             {/* Email Address */}
             <div>
@@ -118,7 +166,7 @@ const Signup = () => {
                 />
               </div>
               <p className="mt-2 text-xs text-wayanad-muted text-right">
-                Must be at least 6 characters
+                Must be at least 8 characters
               </p>
             </div>
 

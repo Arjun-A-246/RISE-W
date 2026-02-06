@@ -117,61 +117,26 @@ const ReportIncident = () => {
   };
 
   const handleSubmit = async () => {
-    // Prepare Data for backend
-    const incidentData = {
-      title: formData.specificIssue ? `${selectedCategory.label} - ${formData.specificIssue}` : selectedCategory.label,
-      description: formData.description,
-      // The backend will automatically set the date
+    // Prepare Data
+    const newReport = {
+      id: "#" + Math.floor(10000 + Math.random() * 90000),
+      category: selectedCategory.label,
+      issue: formData.specificIssue || selectedCategory.label,
+      description: formData.description, // User description
+      // Use resolved address if available, otherwise GPS or manual
+      location: formData.address || (coords
+        ? `GPS: ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`
+        : "Manual Location Entry"),
+      userImage: selectedImage, // Include the image
+      date: "Just now",
+      status: "Open",
+      statusColor: "text-orange-500 bg-orange-500/10",
+      authorityMessage: null,
+      authorityProof: null,
     };
 
-    try {
-      const response = await fetch("http://localhost:5000/incidents", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(incidentData),
-      });
-
-      if (!response.ok) {
-        // Handle HTTP errors
-        const errorData = await response.json();
-        console.error("Failed to save incident:", errorData.message);
-        alert(`Failed to save incident: ${errorData.message}`);
-        // Optionally, handle error state or revert step
-        return;
-      }
-
-      const savedIncident = await response.json();
-      console.log("Incident saved successfully:", savedIncident);
-
-      // Optionally, if you still want to add it to context for immediate UI update:
-      // You might want to update the context with the savedIncident from the backend
-      // which will have a real _id and date from the database.
-      // For now, I'll just keep the original client-side newReport if context is purely for display
-      const newReportForContext = {
-        id: savedIncident._id, // Use the ID from the backend
-        category: selectedCategory.label,
-        issue: formData.specificIssue || selectedCategory.label,
-        description: formData.description,
-        location: formData.address || (coords
-          ? `GPS: ${coords.lat.toFixed(4)}, ${coords.lng.toFixed(4)}`
-          : "Manual Location Entry"),
-        userImage: selectedImage,
-        date: new Date(savedIncident.date).toLocaleDateString(), // Use date from backend
-        status: "Open",
-        statusColor: "text-orange-500 bg-orange-500/10",
-        authorityMessage: null,
-        authorityProof: null,
-      };
-      addReport(newReportForContext); // Save to context with backend ID/date
-
-      setTimeout(() => setStep(3), 800);
-
-    } catch (error) {
-      console.error("Error submitting report:", error);
-      alert("An error occurred while submitting the report.");
-    }
+    addReport(newReport); // Save to context
+    setTimeout(() => setStep(3), 800);
   };
 
   // --- STEP 1 ---

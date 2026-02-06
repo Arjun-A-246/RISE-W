@@ -1,23 +1,28 @@
 import React, { useState } from "react";
-import { Mail, Lock, ArrowRight, Leaf } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Mail, Lock, ArrowRight, Leaf, LogIn } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "../components/ThemeToggle";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState(null);
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { login } = useUser();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setError(null); // Clear previous errors
-    const success = await login(formData.email, formData.password);
-    if (!success) {
-      setError("Invalid credentials. Please try again.");
-    }
+    setLoading(true);
+
+    // Simulate API call
+    setTimeout(() => {
+      login(formData.email);
+      setLoading(false);
+      navigate("/");
+    }, 1500);
   };
 
   return (
@@ -57,13 +62,6 @@ const Login = () => {
               Sign in to manage Wayanad Township
             </p>
           </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-              <span className="block sm:inline">{error}</span>
-            </div>
-          )}
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
